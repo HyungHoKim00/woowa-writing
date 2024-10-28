@@ -2,7 +2,7 @@
 이 문서는 spring 6 이상의 버전을 기준으로 합니다.  
 
 ## 기존의 예외 처리
-스프링을 사용해서 서버의 예외를 전역적으로 예외를 처리하기 위해선 주로 아래와 같은 방법을 사용합니다.
+스프링을 사용해서 서버의 예외를 전역적으로 처리하기 위해선 주로 아래와 같은 방법을 사용합니다.
 ```java
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -20,40 +20,33 @@ public record ResponseForError(
 ) {
 }
 ```
-위와 같은 방식에는 오류 응답 형식을 정해야 한다는 문제가 존재합니다. 이에 대한 고민을 줄이기 위해 RFC에서 정의한 오류 응답 표준이 존재합니다.
+위와 같은 방식은 오류 응답 형식을 정해야 합니다. 이에 대한 고민을 줄이기 위해 RFC에서 정의한 오류 응답 표준이 존재합니다.
 
 ## API 예외 표준: RFC 9457
 RFC 9457에선 HTTP API에 대한 새로운 오류 응답 형식을 정의할 필요가 없도록 HTTP 응답에 기계가 읽을 수 있는 오류 세부 정보를 전달하는 방법으로 'problem detail'을 정의합니다.
-이는 JSON과 XML 형식으로 표현될 수 있습니다.
 
 problem detail은 아래와 같은 구성 요소를 가지고 있습니다.
 
 - type
 
-문제 유형을 식별하는 URI입니다. 설정하지 않은 경우 "about:blank"입니다.
+	문제 유형을 식별하는 URI입니다. 설정하지 않은 경우 "about:blank"입니다.
 - status
 
-응답 상태 코드의 숫자입니다.
+	응답 상태 코드의 숫자입니다.
 - title
 
-문제 유형에 대한 간단한 요약입니다.
+	문제 유형에 대한 간단한 요약입니다.
 - detail
 
-문제 원인에 대한 자세한 설명입니다.
+	문제 원인에 대한 자세한 설명입니다.
 - instance
 
-문제의 원인을 식별하는 URI입니다.
+	문제의 원인을 식별하는 URI입니다.
 - properties
 
-문제에 대한 추가적인 정보를 제공하는 필드입니다.
+	문제에 대한 추가적인 정보를 제공하는 필드입니다.
 
 예시 <br/>
-Request
-```
-GET https://prod.cruru.kr/v1/processes?dashboardId=0 HTTP/1.1
-accept: application/json
-```
-Response
 ```
 HTTP/1.1 404 Not Found
 Content-Type: application/json
